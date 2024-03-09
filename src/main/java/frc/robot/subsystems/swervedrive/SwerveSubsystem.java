@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
+import frc.robot.Constants;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -42,19 +43,24 @@ public class SwerveSubsystem extends SubsystemBase {
   public double maximumSpeed = Units.feetToMeters(14.5);
 
   public SwerveSubsystem(File directory) {
+    // Conversion Factors for the Turning and Drive Motor based on how often signals are sent and the size of the wheels
     double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(
-      13.71, 42);
+      Constants.NonPIDSwerveConstants.angleConversionFactorGearRatio, 
+      Constants.NonPIDSwerveConstants.pulsePerRotation);
+
     double driveConversionFactor = SwerveMath.calculateMetersPerRotation(
-      0.1016, 7.13, 42);
+      Constants.NonPIDSwerveConstants.wheelDiameter, Constants.NonPIDSwerveConstants.driveGearRatio, 
+      Constants.NonPIDSwerveConstants.pulsePerRotation);
+  
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
-    try
-    {
+
+    try{
       swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed);
       // Alternative method if you don't want to supply the conversion factor via JSON files.
       // swerveDrive = new SwerveParser(directory).createSwerveDrive(
       //    maximumSpeed, angleConversionFactor, driveConversionFactor);
-    } catch (Exception e)
-    {
+    } 
+    catch (Exception e){
       throw new RuntimeException(e);
     }
     swerveDrive.setHeadingCorrection(false); 
@@ -192,13 +198,11 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrive.drive(translation,rotation,fieldRelative,false);
   }
 
-  public void driveFieldOriented(ChassisSpeeds velocity)
-  {
+  public void driveFieldOriented(ChassisSpeeds velocity){
     swerveDrive.driveFieldOriented(velocity);
   }
   
-  public void drive(ChassisSpeeds velocity)
-  {
+  public void drive(ChassisSpeeds velocity){
     swerveDrive.drive(velocity);
   }
 
@@ -211,43 +215,35 @@ public class SwerveSubsystem extends SubsystemBase {
   public void simulationPeriodic(){
   }
 
-  public SwerveDriveKinematics getKinematics()
-  {
+  public SwerveDriveKinematics getKinematics(){
     return swerveDrive.kinematics;
   }
 
-  public void resetOdometry(Pose2d initialHolonomicPose)
-  {
+  public void resetOdometry(Pose2d initialHolonomicPose){
     swerveDrive.resetOdometry(initialHolonomicPose);
   }
 
-  public Pose2d getPose()
-  {
+  public Pose2d getPose(){
     return swerveDrive.getPose();
   }
 
-  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds)
-  {
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds){
     swerveDrive.setChassisSpeeds(chassisSpeeds);
   }
 
-  public void postTrajectory(Trajectory trajectory)
-  {
+  public void postTrajectory(Trajectory trajectory){
     swerveDrive.postTrajectory(trajectory);
   }
 
-  public void zeroGyro()
-  {
+  public void zeroGyro(){
     swerveDrive.zeroGyro();
   }
 
-  public void setMotorBrake(boolean brake)
-  {
+  public void setMotorBrake(boolean brake){
     swerveDrive.setMotorIdleMode(brake);
   }
 
-  public Rotation2d getHeading()
-  {
+  public Rotation2d getHeading(){
     return getPose().getRotation();
   }
 
@@ -276,40 +272,33 @@ public class SwerveSubsystem extends SubsystemBase {
                                                         maximumSpeed);
   }
 
-  public ChassisSpeeds getFieldVelocity()
-  {
+  public ChassisSpeeds getFieldVelocity(){
     return swerveDrive.getFieldVelocity();
   }
 
-  public ChassisSpeeds getRobotVelocity()
-  {
+  public ChassisSpeeds getRobotVelocity(){
     return swerveDrive.getRobotVelocity();
   }
 
-  public SwerveController getSwerveController()
-  {
+  public SwerveController getSwerveController(){
     return swerveDrive.swerveController;
   }
 
-  public SwerveDriveConfiguration getSwerveDriveConfiguration()
-  {
+  public SwerveDriveConfiguration getSwerveDriveConfiguration(){
     return swerveDrive.swerveDriveConfiguration;
   }
 
-  public void lock()
-  {
+  public void lock(){
     swerveDrive.lockPose();
   }
 
-  public Rotation2d getPitch()
-  {
+  public Rotation2d getPitch(){
     return swerveDrive.getPitch();
   }
 
   // FAKE vision reading? 
 
-  public void addFakeVisionReading()
-  {
+  public void addFakeVisionReading(){
     swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
   }
 
