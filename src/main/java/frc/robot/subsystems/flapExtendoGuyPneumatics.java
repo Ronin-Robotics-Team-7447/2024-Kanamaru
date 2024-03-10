@@ -12,10 +12,8 @@ import frc.robot.Constants;
 public class flapExtendoGuyPneumatics extends SubsystemBase {
   /** Creates a new flapExtendoGuyPneumatics. */
   Solenoid extendoGuy;
-  public flapExtendoGuyPneumatics() {
-    
+  public flapExtendoGuyPneumatics() {    
     extendoGuy = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.extendoGuy_channel);
-
   }
 
   @Override
@@ -23,7 +21,9 @@ public class flapExtendoGuyPneumatics extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void extendoGuy_set(boolean onoff) {
-    extendoGuy.set(onoff);
+  public void extendoGuy_set() {
+    extendoGuy.set(true);
+    extendoGuy.setPulseDuration(Constants.PneumaticsConstants.extendoGuyWaitTime);
+    extendoGuy.startPulse();
   }
 }

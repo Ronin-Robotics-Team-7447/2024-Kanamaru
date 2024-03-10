@@ -4,15 +4,18 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.flapExtendoGuyPneumatics;
 
-public class BreatheAir extends Command {
+public class FlapBreathe extends Command {
   /** Creates a new BreatheAir. */
   private final flapExtendoGuyPneumatics m_flapExtendoGuyPneumatics;
+  private final Timer m_Timer;
 
-  public BreatheAir(flapExtendoGuyPneumatics ExtendoGuy) {
+  public FlapBreathe(flapExtendoGuyPneumatics ExtendoGuy, Timer wait) {
     m_flapExtendoGuyPneumatics = ExtendoGuy;
+    m_Timer = wait;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -23,9 +26,8 @@ public class BreatheAir extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_flapExtendoGuyPneumatics.extendoGuy_set(true);
+    m_flapExtendoGuyPneumatics.extendoGuy_set();
   }
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
